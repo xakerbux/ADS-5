@@ -83,7 +83,7 @@ int eval(const std::string& post) {
             }
             stack.push(num);
             --i;
-        } else if (c == '+' || c == '-' || c == '*'' || c == '/') {
+        } else if (c == '+' || c == '-' || c == '*' || c == '/') {
             int b = stack.pop();
             int a = stack.pop();
             int res = 0;

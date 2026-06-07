@@ -1,12 +1,19 @@
 // Copyright 2025 NNTU-CS
 #include <string>
-#include <map>
+#include <cctype>
 #include "tstack.h"
 
 int getPriority(char op) {
-    if (op == '+' || op == '-') return 1;
-    if (op == '*' || op == '/') return 2;
-    return 0;
+    switch (op) {
+        case '+':
+        case '-':
+            return 1;
+        case '*':
+        case '/':
+            return 2;
+        default:
+            return 0;
+    }
 }
 
 std::string infx2pstfx(const std::string& inf) {
@@ -31,27 +38,24 @@ std::string infx2pstfx(const std::string& inf) {
             stack.push(c);
         } else if (c == ')') {
             while (!stack.isEmpty() && stack.get() != '(') {
-                result += stack.get();
+                result += stack.pop();
                 result += ' ';
-                stack.pop();
             }
             if (!stack.isEmpty()) {
                 stack.pop();
             }
         } else if (c == '+' || c == '-' || c == '*' || c == '/') {
             while (!stack.isEmpty() && getPriority(stack.get()) >= getPriority(c)) {
-                result += stack.get();
+                result += stack.pop();
                 result += ' ';
-                stack.pop();
             }
             stack.push(c);
         }
     }
 
     while (!stack.isEmpty()) {
-        result += stack.get();
+        result += stack.pop();
         result += ' ';
-        stack.pop();
     }
 
     if (!result.empty() && result.back() == ' ') {
@@ -79,11 +83,9 @@ int eval(const std::string& post) {
             }
             stack.push(num);
             --i;
-        } else if (c == '+' || c == '-' || c == '*' || c == '/') {
-            int b = stack.get();
-            stack.pop();
-            int a = stack.get();
-            stack.pop();
+        } else if (c == '+' || c == '-' || c == '*'' || c == '/') {
+            int b = stack.pop();
+            int a = stack.pop();
             int res = 0;
 
             if (c == '+') {
@@ -100,5 +102,5 @@ int eval(const std::string& post) {
         }
     }
 
-    return stack.get();
+    return stack.pop();
 }
